@@ -1,0 +1,17 @@
+{
+    "name": "{{ project-name }}",
+    "private": true,
+    "version": "1.0.0",
+    "description": "package for creating workers templates",
+    "main": "index.js",
+    "author": "{{ authors }}",
+    "license": "ISC",
+    "dependencies": {
+        "itty-router": "^2.1.9"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20221111.1",
+        "typescript": "^4.9.4",
+        "vitest": "^0.27.2"
+    }
+}

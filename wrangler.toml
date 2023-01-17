@@ -1,0 +1,4 @@
+name = "ip"
+main = "index.ts"
+workers_dev = true
+compatibility_date = "2023-01-17"
