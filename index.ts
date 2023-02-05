@@ -241,7 +241,7 @@ router.get("/", () => {
 
 router.get("/ip", () => new Response(ip))
 
-router.get("/up", () => new Response(user_agent))
+router.get("/ua", () => new Response(user_agent))
 
 router.get("/lang", () => new Response(language))
 
