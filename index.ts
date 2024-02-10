@@ -16,11 +16,7 @@ export default {
         method = request.method || ""
         encoding = request.headers.get('accept-encoding') || ""
         mime_type = request.headers.get('accept') || ""
-        charset = request.headers.get('accept-charset') || ""
-        remote_host = request.headers.get('x-remote-host') || ""
         connection = request.headers.get('connection') || ""
-        keep_alive = request.headers.get('keep-alive') || ""
-        via = request.headers.get('via') || ""
         country = request.headers.get('cf-ipcountry') || ""
         protocol = JSON.parse(request.headers.get('cf-visitor') || "")['scheme'] || ""
         host = request.headers.get('host') || ""
@@ -123,10 +119,6 @@ router.get("/", () => {
                   <td class="info_table_label">MIME Type</td>
                   <td>${mime_type}</td>
               </tr>
-              <tr>
-                  <td class="info_table_label">Charset</td>
-                  <td>${charset}</td>
-              </tr>
           </table>
       </div>
       <!--<div id="middle"></div>-->
@@ -164,15 +156,9 @@ router.get("/", () => {
                   <td>${mime_type}</td>
               </tr>
               <tr>
-                  <td class="cli_command">\$ curl ${host}/charset</td>
-                  <td class="cli_arrow">&rArr;</td>
-                  <td>${charset}</td>
-              </tr>
-              <tr>
                   <td class="cli_command">\$ curl ${host}/all</td>
                   <td class="cli_arrow">&rArr;</td>
                   <td>
-                      
                       ip_addr: ${ip}
                       <br>
                       
@@ -202,19 +188,12 @@ router.get("/", () => {
                       
                       mime: ${mime_type}
                       <br>
-                      
-                      charset: ${charset}
-                      <br>
-                      
-                      via: ${via}
-                      <br>
-                      
                   </td>
               </tr>
               <tr>
                   <td class="cli_command">\$ curl ${host}/all.json</td>
                   <td class="cli_arrow">&rArr;</td>
-                  <td>{&quot;ip_addr&quot;:&quot;${ip}&quot;,&quot;remote_host&quot;:&quot;${remote_host}&quot;,&quot;user_agent&quot;:&quot;${user_agent}&quot;,&quot;language&quot;:&quot;${language}&quot;,&quot;method&quot;:&quot;${method}&quot;,&quot;encoding&quot;:&quot;${encoding}&quot;,&quot;mime&quot;:&quot;${mime_type}&quot;,&quot;via&quot;:&quot;${via}&quot;}</td>
+                  <td>{&quot;ip_addr&quot;:&quot;${ip}&quot;,&quot;user_agent&quot;:&quot;${user_agent}&quot;,&quot;language&quot;:&quot;${language}&quot;,&quot;method&quot;:&quot;${method}&quot;,&quot;encoding&quot;:&quot;${encoding}&quot;,&quot;mime&quot;:&quot;${mime_type}&quot;,&quot;via&quot;:&quot;${via}&quot;}</td>
               </tr>
           </table>
       </div>
