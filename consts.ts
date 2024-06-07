@@ -54,6 +54,7 @@ export const css: string = `
   #info_table td {
     border: solid 1px #888;
     padding: 0px 10px;
+    word-wrap: break-word;
   }
   
   .info_table_label {
@@ -99,7 +100,7 @@ export const css: string = `
     border-bottom: solid 1px #888;
     padding-top: 3px;
     padding-bottom: 3px;
-    overflow: hidden;
+    word-wrap: break-word;
   }
   
   .cli_command {
