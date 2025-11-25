@@ -1,31 +1,33 @@
-import { Router } from 'itty-router'
-import { css } from './consts'
+import { Router } from "itty-router";
+import { css } from "./consts";
 
 // Create a new router
-const router = Router()
+const router = Router();
 
 export default {
-    async fetch(
-        request: Request
-    ): Promise<Response> {
-        request_headers = request.headers
-        ip = request.headers.get('X-Real-IP') || ""
-        user_agent = request.headers.get('user-agent') || ""
-        language = request.headers.get('accept-language') || ""
-        referer = request.headers.get('referer') || ""
-        method = request.method || ""
-        encoding = request.headers.get('accept-encoding') || ""
-        mime_type = request.headers.get('accept') || ""
-        connection = request.headers.get('connection') || ""
-        country = request.headers.get('cf-ipcountry') || ""
-        protocol = JSON.parse(request.headers.get('cf-visitor') || "")['scheme'] || ""
-        host = request.headers.get('host') || ""
-        remote_host = request.headers.get('X-Forwarded-For') || ""
-        keep_alive = request.headers.get('keep-alive') || ""
-        via = request.headers.get('via') || ""
-        charset = request.headers.get('accept-charset') || ""
-        return await router.handle(request);
-    },
+  async fetch(request: Request): Promise<Response> {
+    request_headers = request.headers;
+    ip =
+      request.headers.get("X-Real-IP") ||
+      request.headers.get("cf-connecting-ip") ||
+      "";
+    user_agent = request.headers.get("user-agent") || "";
+    language = request.headers.get("accept-language") || "";
+    referer = request.headers.get("referer") || "";
+    method = request.method || "";
+    encoding = request.headers.get("accept-encoding") || "";
+    mime_type = request.headers.get("accept") || "";
+    country = request.headers.get("cf-ipcountry") || "";
+    try {
+      const cfVisitor = request.headers.get("cf-visitor");
+      protocol = cfVisitor ? JSON.parse(cfVisitor).scheme : "";
+    } catch (e) {
+      protocol = "";
+    }
+    host = request.headers.get("host") || "";
+    charset = request.headers.get("accept-charset") || "";
+    return await router.fetch(request);
+  },
 };
 
 let ip: string;
@@ -36,10 +38,6 @@ let method: string;
 let encoding: string;
 let mime_type: string;
 let charset: string;
-let remote_host: string;
-let connection: string;
-let keep_alive: string;
-let via: string;
 let country: string;
 let protocol: string;
 let host: string;
@@ -49,7 +47,7 @@ let request_headers: Headers;
 Our index route, a simple hello world.
 */
 router.get("/", () => {
-    let html = `<!DOCTYPE html>
+  let html = `<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -163,99 +161,77 @@ router.get("/", () => {
                   <td class="cli_command">\$ curl ${host}/all</td>
                   <td class="cli_arrow">&rArr;</td>
                   <td>
-                      ip_addr: ${ip}
-                      <br>
-                      
-                      remote_host: ${remote_host}
-                      <br>
-                      
-                      user_agent: ${user_agent}
-                      <br>
-                      
-                      language: ${language}
-                      <br>
-                      
-                      referer: ${referer}
-                      <br>
-                      
-                      connection: ${connection}
-                      <br>
-                      
-                      keep_alive: ${keep_alive}
-                      <br>
-                      
-                      method: ${method}
-                      <br>
-                      
-                      encoding: ${encoding}
-                      <br>
-                      
-                      mime: ${mime_type}
-                      <br>
+                      ${Array.from(request_headers || [])
+                        .map(([k, v]) => k + ": " + v)
+                        .join("<br/>")}
                   </td>
               </tr>
               <tr>
                   <td class="cli_command">\$ curl ${host}/all.json</td>
                   <td class="cli_arrow">&rArr;</td>
-                  <td>{&quot;ip_addr&quot;:&quot;${ip}&quot;,&quot;user_agent&quot;:&quot;${user_agent}&quot;,&quot;language&quot;:&quot;${language}&quot;,&quot;method&quot;:&quot;${method}&quot;,&quot;encoding&quot;:&quot;${encoding}&quot;,&quot;mime&quot;:&quot;${mime_type}&quot;,&quot;via&quot;:&quot;${via}&quot;}</td>
+                  <td>${JSON.stringify(
+                    Object.fromEntries(request_headers)
+                  )}</td>
               </tr>
           </table>
       </div>
-      <div id="footer">&copy; ${(new Date).getFullYear()} ${host}</div>
+      <div id="footer">&copy; ${new Date().getFullYear()} ${host}</div>
   </div>
   </body>
   
-  </html>`
+  </html>`;
 
-    if (/curl\/.*/.test(user_agent)) {
-        return new Response(ip, {
-            headers: {
-                'content-type': 'text/plain'
-            }
-        })
-    } else {
-        return new Response(html, {
-            headers: {
-                'content-type': 'text/html;charset=UTF-8'
-            }
-        })
-    }
-})
+  if (/curl\/.*/.test(user_agent)) {
+    return new Response(ip, {
+      headers: {
+        "content-type": "text/plain",
+      },
+    });
+  } else {
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html;charset=UTF-8",
+      },
+    });
+  }
+});
 
-router.get("/ip", () => new Response(ip))
+router.get("/ip", () => new Response(ip));
 
-router.get("/ua", () => new Response(user_agent))
+router.get("/ua", () => new Response(user_agent));
 
-router.get("/lang", () => new Response(language))
+router.get("/lang", () => new Response(language));
 
-router.get("/encoding", () => new Response(encoding))
+router.get("/encoding", () => new Response(encoding));
 
-router.get("/mime", () => new Response(mime_type))
+router.get("/mime", () => new Response(mime_type));
 
-router.get("/charset", () => new Response(charset))
+router.get("/charset", () => new Response(charset));
 
-router.get("/all", () => new Response(
-    `ip_addr: ${ip}
-  user_agent: ${user_agent}
-  language: ${language}
-  country: ${country}
-  referer: ${referer}
-  method: ${method}
-  protocol: ${protocol}
-  connection: ${connection}
-  keep_alive: ${keep_alive}
-  encoding: ${encoding}
-  mime: ${mime_type}
-  charset: ${charset}
-  `
-))
+router.get(
+  "/all",
+  () =>
+    new Response(
+      Array.from(request_headers || [])
+        .map(([k, v]) => k + ": " + v)
+        .join("\n"),
+      {
+        headers: {
+          "content-type": "text/plain;charset=UTF-8",
+        },
+      }
+    )
+);
 
-router.get("/all.json", () => new Response(
-    JSON.stringify(Object.fromEntries(request_headers)), {
-    headers: {
-        'content-type': 'application/json;charset=UTF-8',
-    }
-}))
+router.get(
+  "/all.json",
+  () =>
+    new Response(JSON.stringify(Object.fromEntries(request_headers)), {
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+      },
+    })
+);
 
 /*
 This is the last route we define, it will match anything that hasn't hit a route we've defined
@@ -263,4 +239,19 @@ above, therefore it's useful as a 404 (and avoids us hitting worker exceptions, 
 
 Visit any page that doesn't exist (e.g. /foobar) to see it in action.
 */
-router.all("*", () => new Response("404, not found!", { status: 404 }))
+router.all("*", (request: Request) => {
+  const pathname = new URL(request.url).pathname || "";
+  const headerName = decodeURIComponent(pathname.slice(1)); // request path -> header name
+  if (!headerName) {
+    return new Response("404, not found!", { status: 404 });
+  }
+  const value =
+    request.headers.get(headerName) ??
+    request.headers.get(headerName.toLowerCase());
+  if (value === null) {
+    return new Response("404, not found!", { status: 404 });
+  }
+  return new Response(value, {
+    headers: { "content-type": "text/plain;charset=UTF-8" },
+  });
+});

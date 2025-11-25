@@ -6,4 +6,4 @@ View the live demo here: <https://ip.randomblock1.workers.dev/>
 
 ## Notable differences
 
-A few headers are changed, for example we can't find out the port the server used to respond. Also, this supports IPv6.
+A few headers are missing, for example we can't find out the port the server used to respond. Also, this supports IPv6.

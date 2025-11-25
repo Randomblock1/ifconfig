@@ -1,17 +1,17 @@
 {
-    "name": "{{ project-name }}",
+    "name": "ifconfig-worker",
     "private": true,
     "version": "1.0.0",
-    "description": "package for creating workers templates",
+    "description": "ifconfig.me clone for Cloudflare Workers",
     "main": "index.js",
-    "author": "{{ authors }}",
-    "license": "ISC",
+    "author": "Randomblock1",
+    "license": "MIT",
     "dependencies": {
-        "itty-router": "^2.1.9"
+        "itty-router": "^5.0.22"
     },
     "devDependencies": {
-        "@cloudflare/workers-types": "^4.20221111.1",
-        "typescript": "^4.9.4",
-        "vitest": "^0.27.2"
+        "@cloudflare/workers-types": "^4.20251125.0",
+        "typescript": "^5.9.3",
+        "wrangler": "^4.50.0"
     }
 }
