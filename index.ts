@@ -20,6 +20,10 @@ export default {
         country = request.headers.get('cf-ipcountry') || ""
         protocol = JSON.parse(request.headers.get('cf-visitor') || "")['scheme'] || ""
         host = request.headers.get('host') || ""
+        remote_host = request.headers.get('X-Forwarded-For') || ""
+        keep_alive = request.headers.get('keep-alive') || ""
+        via = request.headers.get('via') || ""
+        charset = request.headers.get('accept-charset') || ""
         return await router.handle(request);
     },
 };
